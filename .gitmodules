@@ -4,3 +4,6 @@
 [submodule "Exercise1/my-program"]
 	path = Exercise1/my-program
 	url = https://github.com/dreambigzhang/my-program.git
+[submodule "Exercise2"]
+	path = Exercise2
+	url = https://github.com/AthonyChen/excerise_2.git
