@@ -21,7 +21,15 @@ class LaneDetectionNode(DTROS):
             [0.0, 0.0, 1.0]
         ])
         self.dist_coeffs = np.array([-0.31269757464446846, 0.07532824868914906, 0.0014825740242535802, 0.0028896360103573197, 0.0])
-        
+
+        # Define HSV color ranges for blue, red, and green
+        self.lower_blue = np.array([100, 150, 50])
+        self.upper_blue = np.array([140, 255, 255])
+        self.lower_red = np.array([0, 150, 50])
+        self.upper_red = np.array([10, 255, 255])
+        self.lower_green = np.array([40, 150, 50])
+        self.upper_green = np.array([80, 255, 255])
+
         # Initialize CV bridge
         self.bridge = CvBridge()
         
