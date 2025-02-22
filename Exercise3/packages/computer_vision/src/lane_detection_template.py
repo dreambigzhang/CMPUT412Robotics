@@ -8,7 +8,7 @@ import cv2
 from cv_bridge import CvBridge
 from sensor_msgs.msg import CompressedImage, Image
 from duckietown.dtros import DTROS, NodeType
-from srv import SetLed
+# from srv import SetLed
 
 class LaneDetectionNode(DTROS):
     def __init__(self, node_name):
@@ -42,8 +42,12 @@ class LaneDetectionNode(DTROS):
         """
         Undistort the image using camera calibration parameters.
         """
-        undistorted_image = cv2.undistort(image, self.camera_matrix, self.dist_coeffs)
-        return undistorted_image
+        h, w = image.shape[:2]
+        new_camera_matrix, self.roi = cv2.getOptimalNewCameraMatrix(
+            self.camera_matrix, self.dist_coeffs, (w, h), 1, (w, h)
+        )
+        undistorted = cv2.undistort(image, self.camera_matrix, self.dist_coeffs, None, new_camera_matrix)
+        return undistorted
 
     def preprocess_image(self, image):
         """
@@ -115,19 +119,19 @@ class LaneDetectionNode(DTROS):
         # Preprocess image
         preprocessed_image = self.preprocess_image(undistorted_image)
         
-        # Detect lanes
-        lane_image = self.detect_lane(preprocessed_image)
+        # # Detect lanes
+        # lane_image = self.detect_lane(preprocessed_image)
         
-        # Publish lane detection results
-        lane_msg = self.bridge.cv2_to_imgmsg(lane_image, encoding="bgr8")
-        self.lane_pub.publish(lane_msg)
+        # # Publish lane detection results
+        # lane_msg = self.bridge.cv2_to_imgmsg(lane_image, encoding="bgr8")
+        # self.lane_pub.publish(lane_msg)
         
-        # Detect lanes and colors
-        color_mask = self.detect_lane_color(preprocessed_image)
+        # # Detect lanes and colors
+        # color_mask = self.detect_lane_color(preprocessed_image)
         
-        # Control LEDs based on detected colors
-        if np.any(color_mask == 255):  # If any color is detected
-            self.set_led("blue")  # Example: Turn on blue LED
+        # # Control LEDs based on detected colors
+        # if np.any(color_mask == 255):  # If any color is detected
+        #     self.set_led("blue")  # Example: Turn on blue LED
 
 if __name__ == '__main__':
     # Initialize the node
